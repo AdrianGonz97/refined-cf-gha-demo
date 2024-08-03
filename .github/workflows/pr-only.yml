@@ -1,0 +1,38 @@
+# not intended for forked PRs
+name: PR
+on:
+  pull_request:
+
+jobs:
+  deploy-prev:
+    runs-on: ubuntu-latest
+    permissions:
+      deployments: write
+      contents: read
+      pull-requests: write
+    name: Deploy Preview Site to Cloudflare Pages
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build site
+        run: pnpm build
+
+      - name: Deploy to Cloudflare Pages
+        uses: AdrianGonz97/refined-cf-pages-action@fix/workflow_run
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          projectName: refined-cf-gha-demo
+          directory: ./.svelte-kit/cloudflare
+          deploymentName: Preview
