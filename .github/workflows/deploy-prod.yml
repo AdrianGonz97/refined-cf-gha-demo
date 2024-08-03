@@ -10,7 +10,7 @@ jobs:
     permissions:
       contents: read
       deployments: write
-    name: Deploy Preview to Cloudflare Pages - PR
+    name: Deploy Production Site to Cloudflare Pages
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
